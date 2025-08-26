@@ -9,7 +9,7 @@
     <ul>
         {% for d in dispositivos %}
             <li>
-                {{ d.nombre }} - Consumo: {{ d.consumo }}W
+                {{d.nombre}} - Consumo: {{d.consumo}}W
                 {% if d.consumo > consumo_maximo %}
                     <strong style="color: red;">(Exeso)</strong>
                 {% endif %}

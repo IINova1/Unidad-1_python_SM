@@ -1,22 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
     <title>Panel de Dispositivos</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; background-color: #f4f4f9; }
+        h1, h2 { color: #333; }
+        .dispositivo-lista { list-style: none; padding: 0; }
+        .dispositivo-item { background-color: #fff; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px; padding: 15px; }
+        .dispositivo-item strong { color: #0056b3; }
+        .alerta { color: #d9534f; font-weight: bold; }
+    </style>
 </head>
 <body>
-    <h1>Panel de Dispositivos</h1>
-    <p>Consumo máximo permitido: {{ consumo_maximo }}W</p>
-    <ul>
+    <h1>Panel de Monitoreo de Dispositivos</h1>
+    
+    <h2>Dispositivos Registrados</h2>
+    <ul class="dispositivo-lista">
         {% for d in dispositivos %}
+            <li class="dispositivo-item">
+                <strong>{{ d.nombre }}</strong>
+                <ul>
+                    <li>Categoría: {{ d.categoria.nombre }}</li>
+                    <li>Zona: {{ d.zona.nombre }}</li>
+                    <li>Consumo Máximo Permitido: {{ d.consumo_maximo_w }}W</li>
+                </ul>
+            </li>
+        {% empty %}
+            <li>No hay dispositivos registrados en la base de datos.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Últimas 5 Mediciones</h2>
+    <ul>
+        {% for med in mediciones %}
             <li>
-                {{d.nombre}} - Consumo: {{d.consumo}}W
-                {% if d.consumo > consumo_maximo %}
-                    <strong style="color: red;">(Exeso)</strong>
+                {{ med.dispositivo.nombre }} registró <strong>{{ med.consumo_w }}W</strong> 
+                el {{ med.timestamp|date:"d/m/Y \a \l\a\s H:i" }}.
+                {% if med.consumo_w > med.dispositivo.consumo_maximo_w %}
+                    <span class="alerta">(¡SOBRECONSUMO!)</span>
                 {% endif %}
             </li>
         {% empty %}
-            <li>No hay dispositivos registrados.</li>
+            <li>No hay mediciones registradas.</li>
         {% endfor %}
     </ul>
+
 </body>
 </html>
